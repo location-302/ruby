@@ -4,10 +4,11 @@ require 'digest'
 def location302Url(id, secret, url)
   service_url = 'http://302-location.com'
 
-  redirect_url = CGI::escape(url)
-  params = "i=#{id}&u=#{redirect_url}"
-  token = Digest::SHA256.hexdigest(secret + params)
+  token = Digest::SHA256.hexdigest(secret + id.to_s + url)
   token = token[0...4]
 
-  "#{service_url}/?#{params}&t=#{token}"
+  redirect_url = CGI::escape(url)
+  params = "i=#{id}&u=#{redirect_url}&t=#{token}"
+
+  "#{service_url}/?#{params}"
 end
